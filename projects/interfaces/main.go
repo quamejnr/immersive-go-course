@@ -1,8 +1,12 @@
 package main
 
+import (
+	"bytes"
+	"fmt"
+)
+
 type OurByteBuffer struct {
-	buf      []byte
-	lastRead int
+	buf []byte
 }
 
 func NewBufferString(s string) *OurByteBuffer {
@@ -22,15 +26,11 @@ func (b *OurByteBuffer) Bytes() []byte {
 
 func (b *OurByteBuffer) Read(p []byte) (int, error) {
 	var count int
-	s := b.buf[b.lastRead:]
-	for i := 0; i < len(p) && i < len(s); i++ {
-		p[i] = s[i]
+	for i := 0; i < len(p) && i < len(b.buf); i++ {
+		p[i] = b.buf[i]
 		count++
 	}
-	if count < len(s) {
-		b.lastRead += count
-	} else {
-		b.lastRead = 0
-	}
+	b.buf = b.buf[count:]
 	return count, nil
 }
+

@@ -2,6 +2,7 @@ package main
 
 import (
 	"slices"
+	"strings"
 	"testing"
 )
 
@@ -53,6 +54,34 @@ func TestBuffer(t *testing.T) {
 		expected := len(buf)
 		if got != expected {
 			t.Errorf("wanted %d, got %d\n", expected, got)
+		}
+	})
+	t.Run("Test Read() multiple times", func(t *testing.T) {
+		tString := "Hello"
+		b := NewBufferString(tString)
+		buf := make([]byte, 2)
+		_, err := b.Read(buf)
+		if err != nil {
+			t.Fatalf("error writing to file %v", err)
+		}
+		got := string(buf)
+		expected := "He"
+		if strings.Compare(got, expected) != 0 {
+			t.Errorf("wanted %s, got %s\n", expected, got)
+		}
+		_, err = b.Read(buf)
+		if err != nil {
+			t.Fatalf("error writing to file %v", err)
+		}
+		got = string(buf)
+		expected = "ll"
+		if strings.Compare(got, expected) != 0 {
+			t.Errorf("wanted %s, got %s\n", expected, got)
+		}
+		got = string(b.Bytes())
+		expected = "o"
+		if strings.Compare(got, expected) != 0 {
+			t.Errorf("wanted %s, got %s\n", expected, got)
 		}
 	})
 }

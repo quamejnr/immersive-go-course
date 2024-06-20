@@ -1,10 +1,5 @@
 package main
 
-import (
-	"bytes"
-	"fmt"
-)
-
 type OurByteBuffer struct {
 	buf []byte
 }
@@ -25,12 +20,10 @@ func (b *OurByteBuffer) Bytes() []byte {
 }
 
 func (b *OurByteBuffer) Read(p []byte) (int, error) {
-	var count int
-	for i := 0; i < len(p) && i < len(b.buf); i++ {
+	var i int
+	for i = 0; i < len(p) && i < len(b.buf); i++ {
 		p[i] = b.buf[i]
-		count++
 	}
-	b.buf = b.buf[count:]
-	return count, nil
+	b.buf = b.buf[i:]
+	return i, nil
 }
-

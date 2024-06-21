@@ -85,3 +85,35 @@ func TestBuffer(t *testing.T) {
 		}
 	})
 }
+
+func TestFilteringPipe(t *testing.T) {
+	subtests := []struct {
+		content  []byte
+		expected []byte
+	}{
+		{
+			[]byte("Hello 1b1b"),
+			[]byte("Hello bb"),
+		},
+		{
+			[]byte("start=1, end=1"),
+			[]byte("start=, end="),
+		},
+		{
+			[]byte("1,2 buckle my shoe"),
+			[]byte(", buckle my shoe"),
+		},
+	}
+
+	t.Run("Testing Write", func(t *testing.T) {
+		for _, tt := range subtests {
+			var w OurByteBuffer
+			f := NewFilteringPipe(w)
+			f.Write(tt.content)
+			if got := f.Bytes(); slices.Compare(got, tt.expected) != 0 {
+				t.Errorf("wanted %s, got %s\n", string(tt.expected), string(got))
+			}
+
+		}
+	})
+}

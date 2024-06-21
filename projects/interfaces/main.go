@@ -1,5 +1,9 @@
 package main
 
+import (
+	"unicode"
+)
+
 type OurByteBuffer struct {
 	buf []byte
 }
@@ -26,4 +30,21 @@ func (b *OurByteBuffer) Read(p []byte) (int, error) {
 	}
 	b.buf = b.buf[i:]
 	return i, nil
+}
+
+type FilteringPipe struct {
+	OurByteBuffer
+}
+
+func (f *FilteringPipe) Write(p []byte) (int, error) {
+	for _, v := range p {
+		if !unicode.IsDigit(rune(v)) {
+			f.buf = append(f.buf, v)
+		}
+	}
+	return len(p), nil
+}
+
+func NewFilteringPipe(w OurByteBuffer) *FilteringPipe {
+	return &FilteringPipe{w}
 }

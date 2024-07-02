@@ -351,7 +351,6 @@ Part of the interface for the cache should look like this:
 
 ```go
 func NewCache[K comparable, V any](entryLimit int) Cache[K, V] { ... }
-
 // Put adds the value to the cache, and returns a boolean to indicate whether a value already existed in the cache for that key.
 // If there was previously a value, it replaces that value with this one.
 // Any Put counts as a refresh in terms of LRU tracking.

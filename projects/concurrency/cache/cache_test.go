@@ -51,7 +51,7 @@ func TestCache(t *testing.T) {
 			{10, 20},
 			{5, 10},
 			{20, 10},
-      {0, 10},
+			{0, 10},
 		}
 		for _, tt := range tests {
 			cache := NewCache[int, string](tt.entryLimit)
@@ -65,10 +65,6 @@ func TestCache(t *testing.T) {
 		}
 	})
 
-  // t.Run("Test zero limit", func(t *testing.T) {
-  //   cache := NewCache[int, string](0)
-  // })
-
 }
 
 func TestCacheConcurrent(t *testing.T) {
@@ -77,11 +73,11 @@ func TestCacheConcurrent(t *testing.T) {
 		cache := NewCache[int, string](10)
 		for i := range 10 {
 			wg.Add(1)
-			go func(i int, wg *sync.WaitGroup) {
+			go func() {
 				cache.Put(i, fmt.Sprintf("data-%d", i))
 				wg.Done()
 
-			}(i, &wg)
+			}()
 		}
 		wg.Wait()
 
@@ -103,24 +99,24 @@ func TestCacheConcurrent(t *testing.T) {
 		cache := NewCache[int, string](10)
 		for i := range 10 {
 			wg.Add(1)
-			go func(i int, wg *sync.WaitGroup) {
+			go func() {
 				cache.Put(i, fmt.Sprintf("data-%d", i))
 				wg.Done()
 
-			}(i, &wg)
+			}()
 		}
 		wg.Wait()
 
 		var reads atomic.Int32
 		for i := range 10 {
 			wg.Add(1)
-			go func(i int, wg *sync.WaitGroup) {
+			go func() {
 				if _, ok := cache.Get(i); ok {
 					reads.Add(1)
 				}
 				wg.Done()
 
-			}(i, &wg)
+			}()
 		}
 		wg.Wait()
 		if reads.Load() != int32(cache.successfulReads) {

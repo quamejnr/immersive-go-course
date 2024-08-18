@@ -1,3 +1,7 @@
 .DS_Store
 !*/assets
 
+projects/http-auth/tmp
+projects/server-database/tmp
+projects/http-auth/.env
+projects/server-database/.env
